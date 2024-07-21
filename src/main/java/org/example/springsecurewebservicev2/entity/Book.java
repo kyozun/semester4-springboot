@@ -1,40 +1,23 @@
 package org.example.springsecurewebservicev2.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
+@Table(name = "book")
+@Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<BookPublisher> bookPublishers;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<BookPublisher> getBookPublishers() {
-        return bookPublishers;
-    }
-
-    public void setBookPublishers(Set<BookPublisher> bookPublishers) {
-        this.bookPublishers = bookPublishers;
-    }
 }

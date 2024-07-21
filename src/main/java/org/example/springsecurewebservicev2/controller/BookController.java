@@ -1,45 +1,52 @@
 package org.example.springsecurewebservicev2.controller;
 
-import org.example.springsecurewebservicev2.entity.Book;
-import org.example.springsecurewebservicev2.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import jakarta.servlet.http.HttpServletResponse;
+import org.example.springsecurewebservicev2.dto.book.BookAndMoreDto;
+import org.example.springsecurewebservicev2.dto.book.CreateBookDto;
+import org.example.springsecurewebservicev2.dto.book.UpdateBookDto;
+import org.example.springsecurewebservicev2.services.serviceImplement.BookServiceImplement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
-public class BookController extends BookService {
-    @Autowired
-    private BookService bookService;
+public class BookController {
+    private final BookServiceImplement bookServiceImplement;
+
+    public BookController(BookServiceImplement bookServiceImplement) {
+        this.bookServiceImplement = bookServiceImplement;
+    }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<BookAndMoreDto> getAllBooks() {
+
+        return bookServiceImplement.getAllBooks();
 
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
-        return bookService.getBookById(id);
+    public BookAndMoreDto getBookById(@PathVariable int id) {
+        return bookServiceImplement.getBookById(id);
     }
 
 
     @PostMapping
-    public void createBook(Book book) {
-        bookService.createBook(book);
+    public void createBook(@RequestBody CreateBookDto createBookDto, HttpServletResponse response) {
+        bookServiceImplement.createBook(createBookDto);
+        /*Trả về 201*/
+        response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
-
-//    @PostMapping("/{id}")
-//    public String updateBook(Long id) {
-//        book.setId(id);
-//        bookService.createBook(book);
-//    }
+    @PutMapping("/{id}")
+    public void updateBook(@PathVariable int id, @RequestBody UpdateBookDto updateBookDto, HttpServletResponse response) {
+        bookServiceImplement.updateBook(id, updateBookDto);
+        /*Trả về 204*/
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
 
     @DeleteMapping("{id}")
-    public void deleteBook(Long id) {
-        bookService.deleteBook(id);
+    public void deleteBook(@PathVariable int id) {
+        bookServiceImplement.deleteBook(id);
     }
 }

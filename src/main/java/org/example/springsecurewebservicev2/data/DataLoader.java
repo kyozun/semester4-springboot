@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -75,6 +76,11 @@ public class DataLoader {
             bookPublisher2.setPublishedDate(LocalDateTime.now());
             bookPublisherRepository.save(bookPublisher2);
 
+            BookPublisher bookPublisher3 = new BookPublisher();
+            bookPublisher3.setBook(book);
+            bookPublisher3.setPublisher(publisher2);
+            bookPublisher3.setPublishedDate(LocalDateTime.now());
+            bookPublisherRepository.save(bookPublisher3);
 
 
         };

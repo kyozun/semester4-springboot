@@ -6,16 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class MyController {
+public class PublicController {
 
     @GetMapping("/public")
     public String publicEndpoint() {
         return "Public endpoint";
-    }
-
-    @GetMapping("/employee")
-    public String employeeEndpoint() {
-        return "employee";
     }
 
     @GetMapping("/admin")

@@ -2,8 +2,10 @@ package org.example.springsecurewebservicev2.config;
 
 import org.example.springsecurewebservicev2.entity.User;
 import org.example.springsecurewebservicev2.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,7 +21,6 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 public class SecurityConfig {
 
     private final UserRepository userRepository;
-    CookieClearingLogoutHandler cookies = new CookieClearingLogoutHandler("JSESSIONID");
 
     public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -27,8 +28,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/api/public").permitAll().requestMatchers("/api/employee").hasRole("EMPLOYEE").requestMatchers("/api/admin").hasRole("ADMIN").anyRequest().
-                        authenticated()).formLogin(loginForm -> loginForm.permitAll().defaultSuccessUrl("/api/home")).logout(logout -> logout.deleteCookies("JSESSIONID")).httpBasic(Customizer.withDefaults());
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.
+                        requestMatchers("/api/books", "/api/books/*", "/api/publishers","/api/publishers/*", "/api/publications","/api/publications/*").permitAll().
+                        requestMatchers("/api/employees","/api/employees/*").hasRole("EMPLOYEE").
+                        requestMatchers("/api/admin").hasRole("ADMIN").
+                        anyRequest().authenticated()).
+                formLogin(loginForm -> loginForm.permitAll().defaultSuccessUrl("/api/home")).
+                logout(logout -> logout.deleteCookies("JSESSIONID")).httpBasic(Customizer.withDefaults());
+        http.csrf().disable();
+
         return http.build();
     }
 
